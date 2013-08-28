@@ -1,0 +1,106 @@
+package manjunath;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.util.HashSet;
+
+
+public class Read_data_from_two_excel_store_in_hashset
+{
+	public static <T> Set<T> intersection(Set<T> setA, Set<T> setB)
+	{
+	    Set<T> tmp = new TreeSet<T>();
+	    for (T x : setA)
+	      if (setB.contains(x))
+	        tmp.add(x);
+	    return tmp;
+	  }
+	 public static <T> Set<T> difference(Set<T> setA, Set<T> setB)
+	 {
+		    Set<T> tmp = new TreeSet<T>(setA);
+		    tmp.removeAll(setB);
+		    return tmp;
+	 }
+	 
+	public static void main(String[] args) 
+	{
+		try
+		{
+			FileInputStream file = new FileInputStream(new File("E:\\test1.xlsx"));
+            FileInputStream file1 = new FileInputStream(new File("E:\\test2.xlsx"));
+			
+			XSSFWorkbook workbook = new XSSFWorkbook(file);
+			XSSFWorkbook workbook1 = new XSSFWorkbook(file1);
+
+			XSSFSheet sheet = workbook.getSheetAt(0);
+			XSSFSheet sheet1 = workbook1.getSheetAt(0);
+			
+			HashSet<String> data = new HashSet<String>();
+			HashSet<String> data1 = new HashSet<String>();
+			
+
+		
+			Iterator<Row> rowIterator = sheet.iterator();
+			Iterator<Row> rowIterator1 = sheet1.iterator();
+			
+			while (rowIterator.hasNext()) 
+			{
+				Row row = rowIterator.next();
+				
+				Iterator<Cell> cellIterator = row.cellIterator();
+				
+				while (cellIterator.hasNext()) 
+				{
+					Cell cell = cellIterator.next();
+					
+					//System.out.println(cell.getRichStringCellValue()+ "\t");
+					data.add(cell.getRichStringCellValue().toString());
+				}			
+				
+				 file.close();			
+			}	    
+			while (rowIterator1.hasNext()) 
+			{
+				Row row1 = rowIterator1.next();
+				
+				Iterator<Cell> cellIterator1 = row1.cellIterator();
+				
+				while (cellIterator1.hasNext()) 
+				{
+					Cell cell1 = cellIterator1.next();
+					
+					//System.out.println(cell1.getRichStringCellValue()+ "\t");
+					data1.add(cell1.getRichStringCellValue().toString());
+				}	
+			
+				 file.close();			
+			}
+			System.out.println("size of file1:"+"\t"+data.size()+"\t"+"and classes are"+"\t"+data+"\n"+"size of file2:"+"\t"+data1.size()+"\t"+"and classes are"+"\t"+data1+"\t"+"\n" );
+			
+			    System.out.println("similar classes " + intersection(data, data1)+"\n");
+			    System.out.println("classes which are not in file2: " + difference(data, data1)+"\n");
+			    System.out.println("classes which are not in file1: " + difference(data1, data)+"\n");
+			
+			
+		
+		}
+		
+		
+		catch (Exception e) 
+		{
+			e.printStackTrace();
+		}
+		
+			
+		
+		
+	}
+}
